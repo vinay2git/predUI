@@ -1,0 +1,132 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import java.awt.FlowLayout;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.awt.event.ActionEvent;
+
+public class BitWiser {
+
+	private JFrame frame;
+	private JTextField textField, textField1;
+	private JLabel lblNewLabel, lblNewLabel1;
+	private String changeSetId;
+	private URL url;
+	private HttpURLConnection con;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					BitWiser window = new BitWiser();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public BitWiser() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setTitle("RootWise");
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.setLocationRelativeTo(null);
+		
+		JPanel panelRootWise = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panelRootWise.getLayout();
+		flowLayout.setVgap(50);
+		frame.getContentPane().add(panelRootWise, BorderLayout.CENTER);
+		
+		JPanel panelUsername = new JPanel();
+		panelRootWise.add(panelUsername);
+
+		JLabel lblChangeSet = new JLabel("ChangeSet ID:");
+		panelRootWise.add(lblChangeSet);
+		JLabel lblRootWise = new JLabel("RootWise Prediction:");
+		panelRootWise.add(lblRootWise);
+		lblRootWise.setVisible(false);
+
+		textField = new JTextField("");
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+
+		JButton btnNewButton = new JButton("Prediction");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				changeSetId = textField.getText();
+				try {
+					url = new URL("http://10.196.79.132:9092/analyzer/predict/" + changeSetId);
+					con = (HttpURLConnection) url.openConnection();
+					con.setRequestMethod("GET");
+					int status = con.getResponseCode();
+					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					String inputLine;
+					StringBuffer content = new StringBuffer();
+					while ((inputLine = in.readLine()) != null) {
+						content.append(inputLine);
+
+					}
+					in.close();
+
+					JSONObject myResponse;
+					try {
+						myResponse = new JSONObject(content.toString());
+						System.out.println("filePassRate- " + myResponse.getJSONObject("passRateFactors")
+								.getBoolean("fileParameterValueLowPassrate"));
+						lblNewLabel1.setVisible(true);
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				
+			}
+		});
+		frame.getContentPane().add(btnNewButton);
+		frame.getContentPane().add(lblNewLabel1);
+
+	}
+
+}

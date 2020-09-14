@@ -1,0 +1,35 @@
+package rootWiser;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class predictionDetails {
+
+	public static JFrame frmPredictionDetails;
+
+	public predictionDetails() {
+		initialize();
+		try {
+			frmPredictionDetails.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void initialize() {
+		frmPredictionDetails = new JFrame();
+		frmPredictionDetails.setTitle("ChangeSet Predictions");
+		frmPredictionDetails.setBounds(100, 100, 450, 411);
+		frmPredictionDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmPredictionDetails.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmPredictionDetails.setLocationRelativeTo(null);
+	}
+
+
+}
